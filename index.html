@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#4f46e5">
-    <title>Prince Online Center | AI Hub</title>
+    <title>Prince Online Center | AI Hub Ultimate</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@700&family=Oswald:wght@500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@700&family=Oswald:wght@500&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -37,8 +37,9 @@
         }
         [data-theme="dark"] body { background-color: #0f172a; color: #f8fafc; }
         [data-theme="dark"] .glass-nav { background: rgba(15, 23, 42, 0.9); border-bottom-color: #334155; }
-        [data-theme="dark"] .tool-card, [data-theme="dark"] .editor-panel, [data-theme="dark"] .faq-item { background: #1e293b; border-color: #334155; }
-        [data-theme="dark"] .editor-panel input, [data-theme="dark"] .editor-panel select { background: #0f172a; color: white; border-color: #334155; }
+        [data-theme="dark"] .tool-card, [data-theme="dark"] .editor-panel, [data-theme="dark"] .modal-content, [data-theme="dark"] .testimonial-card { background: #1e293b; border-color: #334155; }
+        [data-theme="dark"] .editor-panel input, [data-theme="dark"] .editor-panel select, [data-theme="dark"] textarea { background: #0f172a; color: white; border-color: #334155; }
+        [data-theme="dark"] footer { background: #020617; border-top: 1px solid #1e293b; }
 
         /* Animations */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -54,6 +55,10 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255,255,255,0.3);
         }
+        
+        /* Banner & Nav Positioning */
+        #top-banner { transition: margin-top 0.3s ease; }
+        #navbar { transition: top 0.3s ease; }
         
         /* Tools Grid */
         .tool-card {
@@ -74,21 +79,31 @@
         .msg-bot { background: #e0e7ff; color: #3730a3; align-self: flex-start; }
         .msg-user { background: #4f46e5; color: white; align-self: flex-end; }
         
-        /* Scrollbars */
+        /* Modal & Scrollbars */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
         
-        /* Custom Range Slider */
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 16px; width: 16px;
-            border-radius: 50%; background: #4f46e5; cursor: pointer; margin-top: -6px;
+        /* Preview Box */
+        .preview-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(241, 245, 249, 0.5);
+            position: relative;
+            overflow: hidden;
         }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 2px;
-        }
+        [data-theme="dark"] .preview-box { border-color: #475569; background-color: rgba(30, 41, 59, 0.5); }
+        
+        .testimonial-card { transition: 0.3s; }
+        .testimonial-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
+
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="overflow-x-hidden pt-10"> <!-- Added pt-10 for fixed banner -->
 
     <!-- 1. SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700 px-4 text-center">
@@ -96,27 +111,22 @@
             <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-600 to-pink-500 animate-pulse flex items-center justify-center shadow-2xl">
                 <i class="fa-solid fa-bolt text-5xl text-white"></i>
             </div>
-            <div class="absolute -inset-2 bg-indigo-500 blur-xl opacity-20 animate-pulse"></div>
         </div>
         <h1 class="text-3xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500 tracking-tight leading-tight">PRINCE ONLINE CENTER</h1>
         <p class="text-slate-400 text-xs md:text-sm mt-3 font-medium tracking-[0.3em] uppercase">Digital Services v2.0</p>
     </div>
 
-    <!-- 2. COOKIE POPUP (From Request) -->
-    <!-- Initially hidden, shown via JS -->
-    <div id="cookie-popup" class="hidden fixed bottom-5 left-5 z-[5000] animate-enter">
-        <div class="flex flex-col items-center w-80 md:w-96 bg-white text-gray-500 text-center p-6 rounded-lg border border-gray-500/30 text-sm shadow-2xl">
-            <img class="w-14 h-14" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/cookies/cookieImage1.svg" alt="cookieImage1">
-            <h2 class="text-gray-800 text-xl font-medium pb-3 mt-2">We care about your privacy</h2>
-            <p class="w-11/12">This website uses cookies for functionality, analytics, and marketing. By accepting, you agree to our <a href="#" class="font-medium underline">Cookie Policy</a>.</p>
-            <div class="flex items-center justify-center mt-6 gap-4 w-full">
-                <button onclick="hideCookie()" type="button" class="font-medium px-8 border border-gray-500/30 py-2 rounded hover:bg-blue-500/10 active:scale-95 transition">Decline</button>
-                <button onclick="hideCookie()" type="button" class="bg-indigo-600 px-8 py-2 rounded text-white font-medium active:scale-95 transition">Accept</button>
-            </div>
-        </div>
+    <!-- 2. ANNOUNCEMENT BANNER -->
+    <div id="top-banner" class="fixed top-0 w-full z-[60] bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white h-10 flex items-center justify-center px-4 shadow-lg">
+        <p class="text-xs md:text-sm font-medium tracking-wide">
+            <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold mr-2 uppercase">New</span>
+            Powerful AI Photo Editor is now live! 
+            <button onclick="router('editor')" class="ml-2 underline font-bold hover:text-indigo-100 cursor-pointer">Try it now &rarr;</button>
+        </p>
+        <button onclick="closeBanner()" class="absolute right-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <!-- 3. GLOBAL PROCESSING LOADER -->
+    <!-- 3. GLOBAL LOADER -->
     <div id="global-loader" class="hidden fixed inset-0 z-[9998] bg-black/40 backdrop-blur-md flex items-center justify-center transition-all">
         <div class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center animate-enter max-w-sm text-center">
             <div class="w-14 h-14 border-[5px] border-indigo-100 border-t-indigo-600 rounded-full loader-spin mb-4"></div>
@@ -126,7 +136,7 @@
     </div>
 
     <!-- Navbar -->
-    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 glass-nav border-b border-gray-200/50">
+    <nav id="navbar" class="fixed w-full top-10 z-50 transition-all duration-300 glass-nav border-b border-gray-200/50">
         <div class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
             <!-- Logo -->
             <div class="text-xl md:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500 cursor-pointer flex items-center gap-2" onclick="router('home')">
@@ -171,62 +181,180 @@
         <!-- Content Injected via JS -->
     </main>
 
-    <!-- Floating Action Buttons -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-end">
-        <!-- Chat Window -->
-        <div id="chat-window" class="chat-container">
-            <div class="bg-gradient-to-r from-indigo-600 to-pink-500 p-4 text-white font-bold flex justify-between items-center">
-                <span class="text-sm"><i class="fa-solid fa-robot mr-2"></i> AI Assistant</span>
-                <i class="fa-solid fa-xmark cursor-pointer hover:text-gray-200" onclick="toggleChat()"></i>
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-slate-300 pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10 mb-12">
+            <div class="col-span-1 md:col-span-1">
+                <div class="text-xl font-extrabold text-white flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-sm"><i class="fa-solid fa-bolt"></i></div>
+                    PRINCE HUB
+                </div>
+                <p class="text-sm leading-relaxed mb-6 text-slate-400">Your one-stop digital solution center. We combine cutting-edge AI technology with essential online services to make your digital life easier.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 transition text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-500 transition text-white"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition text-white"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
-            <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-slate-50" id="chat-messages">
-                <div class="chat-msg msg-bot">Hi there! Need help editing a photo or using our tools?</div>
+            
+            <div>
+                <h3 class="text-white font-bold mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a onclick="router('home')" class="hover:text-indigo-400 cursor-pointer transition">Home</a></li>
+                    <li><a onclick="router('services')" class="hover:text-indigo-400 cursor-pointer transition">Services</a></li>
+                    <li><a onclick="router('tools')" class="hover:text-indigo-400 cursor-pointer transition">AI Tools</a></li>
+                    <li><a onclick="router('editor')" class="hover:text-indigo-400 cursor-pointer transition">Photo Editor</a></li>
+                </ul>
             </div>
-            <div class="p-3 border-t bg-white flex gap-2">
-                <input type="text" id="chat-input" class="flex-1 bg-gray-100 rounded-full px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type..." onkeypress="handleChatKey(event)">
-                <button onclick="sendMessage()" class="bg-indigo-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+            
+            <div>
+                <h3 class="text-white font-bold mb-4">Contact</h3>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-location-dot mt-1 text-indigo-500"></i> India, UP</li>
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-phone mt-1 text-indigo-500"></i> +91 70813 55506</li>
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-envelope mt-1 text-indigo-500"></i> help@princehub.com</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 class="text-white font-bold mb-4">Newsletter</h3>
+                <p class="text-xs text-slate-500 mb-3">Subscribe for AI updates & offers.</p>
+                <div class="flex">
+                    <input type="email" placeholder="Email address" class="bg-slate-800 border-none rounded-l-lg px-4 py-2 text-sm w-full focus:ring-1 focus:ring-indigo-500 outline-none">
+                    <button class="bg-indigo-600 px-4 py-2 rounded-r-lg text-white hover:bg-indigo-700 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-800 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
+            <p>&copy; 2024 Prince Online Center. All rights reserved.</p>
+            <div class="flex gap-4 mt-2 md:mt-0">
+                <a href="#" class="hover:text-white">Privacy Policy</a>
+                <a href="#" class="hover:text-white">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat & Floating Btns -->
+   <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-end">
+
+    <!-- CHAT WINDOW -->
+    <div id="chat-window" class="chat-container hidden w-80 md:w-96 max-w-full flex flex-col rounded-xl shadow-xl overflow-hidden">
+        
+        <!-- HEADER -->
+        <div class="bg-gradient-to-r from-indigo-600 to-pink-500 p-4 text-white font-bold flex justify-between items-center">
+            <span class="text-sm"><i class="fa-solid fa-robot mr-2"></i> AI Assistant</span>
+            <i class="fa-solid fa-xmark cursor-pointer hover:text-gray-200" onclick="toggleChat()"></i>
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-slate-50" id="chat-messages">
+            <div class="chat-msg msg-bot bg-slate-200 p-2 rounded-xl self-start max-w-[80%]">
+                Hi there! Need help editing a photo or using our tools?
             </div>
         </div>
 
-        <!-- Buttons -->
-        <button onclick="toggleChat()" class="w-12 h-12 bg-white text-indigo-600 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition duration-300 border border-indigo-100">
-            <i class="fa-solid fa-message text-lg"></i>
-        </button>
-        <button onclick="window.open('https://wa.me/917081355506', '_blank')" class="w-12 h-12 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition duration-300">
-            <i class="fa-brands fa-whatsapp text-2xl"></i>
-        </button>
+        <!-- INPUT -->
+        <div class="p-3 border-t bg-white flex gap-2">
+            <input type="text" id="chat-input" class="flex-1 bg-gray-100 rounded-full px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type..." onkeypress="handleChatKey(event)">
+            <button onclick="sendMessage()" class="bg-indigo-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- CHAT BUTTON -->
+    <button onclick="toggleChat()" class="w-12 h-12 bg-white text-indigo-600 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition duration-300 border border-indigo-100">
+        <i class="fa-solid fa-message text-lg"></i>
+    </button>
+
+    <!-- WHATSAPP BUTTON -->
+    <button onclick="window.open('https://wa.me/917081355506', '_blank')" class="w-12 h-12 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition duration-300">
+        <i class="fa-brands fa-whatsapp text-2xl"></i>
+    </button>
+
+</div>
+
+<script>
+function toggleChat() {
+    const chat = document.getElementById('chat-window');
+    chat.classList.toggle('hidden');
+}
+
+function handleChatKey(e) {
+    if(e.key === "Enter") sendMessage();
+}
+
+function sendMessage() {
+    const input = document.getElementById("chat-input");
+    const value = input.value.trim();
+    if(!value) return;
+
+    const area = document.getElementById("chat-messages");
+
+    // USER MESSAGE
+    const user = document.createElement("div");
+    user.className = "chat-msg bg-indigo-100 text-indigo-800 p-2 rounded-xl self-end max-w-[80%] msg-user";
+    user.textContent = value;
+    area.appendChild(user);
+
+    input.value = "";
+    area.scrollTop = area.scrollHeight;
+
+    // BOT RESPONSE
+    setTimeout(() => {
+        const bot = document.createElement("div");
+        bot.className = "chat-msg bg-slate-200 p-2 rounded-xl self-start max-w-[80%] msg-bot";
+
+        const msg = value.toLowerCase();
+
+        // Website-smart replies
+        if(msg.includes("print")) bot.textContent = "To order printing, go to Printing service card or message us on WhatsApp.";
+        else if(msg.includes("form") || msg.includes("apply")) bot.textContent = "You can apply for any form through our Form Filling service.";
+        else if(msg.includes("document")) bot.textContent = "We help with Aadhar, PAN, certificates and other document services.";
+        else if(msg.includes("photo") || msg.includes("ai")) bot.textContent = "Open our AI Editor to remove background, edit photos or generate AI images.";
+        else if(msg.includes("hello") || msg.includes("hi")) bot.textContent = "Hello! How can I assist you today?";
+        else bot.textContent = "I can help you with printing, form filling, documents, photo editing and more!";
+
+        area.appendChild(bot);
+        area.scrollTop = area.scrollHeight;
+    }, 500);
+}
+</script>
+
+<style>
+.chat-msg { word-wrap: break-word; }
+
+.msg-user { animation: slideRight 0.3s ease; }
+.msg-bot { animation: slideLeft 0.3s ease; }
+
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(40%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-40%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+</style>
+
+    <!-- Toast -->
     <div id="toast-container" class="fixed top-24 right-5 z-[2000] flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
-        // ================= SPLASH & COOKIE =================
+        // ================= CORE FUNCTIONS =================
         window.addEventListener('load', () => {
-            // Splash Screen
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    // Show Cookie Popup after Splash
-                    setTimeout(() => {
-                        document.getElementById('cookie-popup').classList.remove('hidden');
-                        document.getElementById('cookie-popup').classList.add('flex');
-                        
-                        // Auto hide after 10 seconds
-                        setTimeout(() => {
-                            hideCookie();
-                        }, 10000);
-                    }, 500);
-                }, 700);
-            }, 1500); 
+                setTimeout(() => { splash.style.display = 'none'; }, 700);
+            }, 1000); 
         });
 
-        function hideCookie() {
-            const c = document.getElementById('cookie-popup');
-            c.classList.add('opacity-0');
-            setTimeout(() => c.remove(), 500);
+        function closeBanner() {
+            document.getElementById('top-banner').style.marginTop = '-40px';
+            document.getElementById('navbar').style.top = '0';
+            document.body.style.paddingTop = '0';
         }
 
         function toggleLoader(show) {
@@ -234,27 +362,25 @@
             if(show) loader.classList.remove('hidden'); else loader.classList.add('hidden');
         }
 
-        // ================= NAVBAR LOGIC =================
         function toggleMenu() {
             const menu = document.getElementById('mobile-menu');
             const icon = document.getElementById('menu-icon');
             if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                icon.classList.remove('fa-bars'); icon.classList.add('fa-xmark');
+                menu.classList.remove('hidden'); icon.classList.remove('fa-bars'); icon.classList.add('fa-xmark');
             } else {
-                menu.classList.add('hidden');
-                icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
+                menu.classList.add('hidden'); icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
             }
         }
         function closeMenu() {
             document.getElementById('mobile-menu').classList.add('hidden');
-            const icon = document.getElementById('menu-icon');
-            icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
+            document.getElementById('menu-icon').classList.add('fa-bars');
+            document.getElementById('menu-icon').classList.remove('fa-xmark');
         }
 
         // ================= ROUTER & PAGES =================
         const pages = {
             home: `
+               <!-- HERO SECTION -->
                <section class="max-w-7xl mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center mb-16 animate-enter pt-4">
                     <div class="order-2 md:order-1">
                         <span class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wide mb-6 border border-indigo-200">✨ #1 AI ONLINE CENTER</span>
@@ -271,8 +397,8 @@
                     </div>
                 </section>
                 
-                <!-- Features Grid -->
-                <div class="max-w-7xl mx-auto px-4 mb-20 animate-enter delay-100">
+                <!-- FEATURES GRID -->
+                <div class="max-w-7xl mx-auto px-4 mb-24 animate-enter delay-100">
                      <div class="text-center mb-12">
                         <h2 class="text-2xl md:text-3xl font-bold mb-4">Why Prince Online Center?</h2>
                         <div class="h-1 w-20 bg-indigo-600 mx-auto rounded-full"></div>
@@ -301,60 +427,94 @@
                     </div>
                 </div>
 
-                <!-- About Section (New) -->
-                <section class="bg-indigo-50 py-16 mb-20 rounded-3xl mx-4">
-                    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10">
-                        <div class="flex-1">
-                            <h2 class="text-3xl font-bold mb-4">About Us</h2>
-                            <p class="text-slate-600 leading-relaxed mb-6">Prince Online Center is dedicated to providing accessible, high-quality digital services. From AI-driven image generation to essential document handling, we bridge the gap between technology and daily needs. Our mission is to simplify complex digital tasks for everyone.</p>
-                            <button onclick="router('services')" class="text-indigo-600 font-bold hover:underline">View Services &rarr;</button>
-                        </div>
-                        <div class="flex-1 flex justify-center">
-                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=500&q=80" class="rounded-2xl shadow-lg border-4 border-white rotate-2">
+                <!-- DETAILED ABOUT SECTION -->
+                <section class="bg-indigo-50 py-20 mb-24 skew-y-1 relative">
+                    <div class="max-w-6xl mx-auto px-6 -skew-y-1">
+                        <div class="flex flex-col md:flex-row items-center gap-12">
+                            <div class="flex-1">
+                                <span class="text-indigo-600 font-extrabold tracking-wider text-xs uppercase mb-2 block">Our Story</span>
+                                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-slate-800">Bridging the Gap Between <br> Technology & You</h2>
+                                <p class="text-slate-600 leading-relaxed mb-6 text-sm md:text-base">
+                                    Founded with a vision to simplify digital tasks, <strong>Prince Online Center</strong> has evolved into a comprehensive hub for AI-driven solutions. We understand the hassle of formatting documents, editing photos for official use, or creating digital art.
+                                </p>
+                                <p class="text-slate-600 leading-relaxed mb-8 text-sm md:text-base">
+                                    Our platform leverages advanced AI to provide tools that are usually expensive or complex, completely accessible in your browser. From students to professionals, we empower everyone to create, edit, and organize instantly.
+                                </p>
+                                <div class="flex gap-8 border-t border-indigo-200 pt-6">
+                                    <div>
+                                        <h4 class="text-2xl font-bold text-indigo-600">10k+</h4>
+                                        <p class="text-xs text-slate-500">Users Served</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-2xl font-bold text-indigo-600">50k+</h4>
+                                        <p class="text-xs text-slate-500">Files Processed</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-2xl font-bold text-indigo-600">4.9</h4>
+                                        <p class="text-xs text-slate-500">User Rating</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1 relative">
+                                <div class="absolute -top-4 -right-4 w-24 h-24 bg-pink-500 rounded-full opacity-20 blur-2xl"></div>
+                                <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-indigo-500 rounded-full opacity-20 blur-2xl"></div>
+                                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-2xl relative z-10 border-4 border-white">
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Testimonials (New) -->
-                <div class="max-w-7xl mx-auto px-4 mb-20">
-                    <h2 class="text-3xl font-bold text-center mb-10">What Users Say</h2>
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                            <div class="flex items-center gap-2 mb-3 text-yellow-400"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <p class="text-slate-600 text-sm mb-4">"The AI Editor is fantastic! Removed the background from my product photos in seconds."</p>
-                            <h4 class="font-bold text-sm">- Rajesh K.</h4>
+                <!-- TESTIMONIALS SECTION -->
+                <section class="max-w-7xl mx-auto px-4 mb-20">
+                    <div class="text-center mb-16">
+                        <span class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Testimonials</span>
+                        <h2 class="text-3xl font-bold mt-2">Loved by Thousands</h2>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Card 1 -->
+                        <div class="testimonial-card bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-600 mb-6 text-sm leading-relaxed">"The AI Background Remover is magic! Saved me hours of Photoshop work for my product catalog. Highly recommended!"</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-bold text-sm">Sarah Jenkins</h4>
+                                    <p class="text-xs text-gray-500">E-commerce Owner</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                            <div class="flex items-center gap-2 mb-3 text-yellow-400"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <p class="text-slate-600 text-sm mb-4">"Best online center for form filling. Very professional support via WhatsApp."</p>
-                            <h4 class="font-bold text-sm">- Priya M.</h4>
+                        <!-- Card 2 -->
+                        <div class="testimonial-card bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                            <p class="text-slate-600 mb-6 text-sm leading-relaxed">"I used the Passport Photo maker for my visa application. It resized perfectly and I downloaded it instantly. Super easy."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-bold text-sm">Rahul Mehta</h4>
+                                    <p class="text-xs text-gray-500">Student</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                            <div class="flex items-center gap-2 mb-3 text-yellow-400"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                            <p class="text-slate-600 text-sm mb-4">"I use the image compressor daily. Fast and doesn't lose quality."</p>
-                            <h4 class="font-bold text-sm">- Amit S.</h4>
+                        <!-- Card 3 -->
+                        <div class="testimonial-card bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-600 mb-6 text-sm leading-relaxed">"The new AI Art Generator is so fun to play with. Prince Online Center is my go-to for all quick digital tasks."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-bold text-sm">Emily Chen</h4>
+                                    <p class="text-xs text-gray-500">Graphic Designer</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- FAQ (New) -->
-                <div class="max-w-3xl mx-auto px-4 mb-24">
-                    <h2 class="text-3xl font-bold text-center mb-10">Frequently Asked Questions</h2>
-                    <div class="space-y-4">
-                        <details class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 group">
-                            <summary class="font-bold cursor-pointer flex justify-between items-center">Is the AI Editor free? <i class="fa-solid fa-chevron-down group-open:rotate-180 transition"></i></summary>
-                            <p class="text-slate-600 text-sm mt-3 pl-2">Yes, basic features and AI generation are free to use for all users.</p>
-                        </details>
-                        <details class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 group">
-                            <summary class="font-bold cursor-pointer flex justify-between items-center">How do I order printing? <i class="fa-solid fa-chevron-down group-open:rotate-180 transition"></i></summary>
-                            <p class="text-slate-600 text-sm mt-3 pl-2">Simply go to the Services page and click "Order via WhatsApp". Send us your file and we'll handle the rest.</p>
-                        </details>
-                        <details class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 group">
-                            <summary class="font-bold cursor-pointer flex justify-between items-center">Is my data secure? <i class="fa-solid fa-chevron-down group-open:rotate-180 transition"></i></summary>
-                            <p class="text-slate-600 text-sm mt-3 pl-2">Absolutely. Images processed in the browser tools (like Compressor) often don't leave your device. Uploaded data is processed securely.</p>
-                        </details>
-                    </div>
-                </div>
+                </section>
             `,
             tools: `
                 <section class="max-w-7xl mx-auto px-4 animate-enter">
@@ -373,10 +533,6 @@
                             <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-sliders"></i></div>
                             <h3 class="font-bold text-sm md:text-lg">Photo Editor</h3>
                         </div>
-                        <div class="tool-card group" onclick="openToolModal('bgremove')">
-                            <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-eraser"></i></div>
-                            <h3 class="font-bold text-sm md:text-lg">BG Remover</h3>
-                        </div>
                         <div class="tool-card group" onclick="openToolModal('compressor')">
                             <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-compress"></i></div>
                             <h3 class="font-bold text-sm md:text-lg">Compressor</h3>
@@ -385,13 +541,14 @@
                             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-qrcode"></i></div>
                             <h3 class="font-bold text-sm md:text-lg">QR Maker</h3>
                         </div>
+                         <div class="tool-card group" onclick="openToolModal('resizer')">
+                             <span class="tool-badge">New</span>
+                            <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-maximize"></i></div>
+                            <h3 class="font-bold text-sm md:text-lg">Image Resizer</h3>
+                        </div>
                         <div class="tool-card group" onclick="triggerPDF()">
                             <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-file-pdf"></i></div>
                             <h3 class="font-bold text-sm md:text-lg">Img to PDF</h3>
-                        </div>
-                        <div class="tool-card group" onclick="openToolModal('objremove')">
-                            <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-magic-wand-sparkles"></i></div>
-                            <h3 class="font-bold text-sm md:text-lg">Obj Remover</h3>
                         </div>
                         <div class="tool-card group" onclick="openToolModal('passport')">
                             <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"><i class="fa-solid fa-id-badge"></i></div>
@@ -399,44 +556,83 @@
                         </div>
                     </div>
                     
-                    <!-- Dynamic Modal with Y-Scroll Fix -->
+                    <!-- Dynamic Modal -->
                     <div id="tool-modal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
                         <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl relative animate-enter flex flex-col max-h-[90vh]">
-                            <div class="p-4 border-b flex justify-between items-center">
-                                <h3 class="font-bold text-lg" id="modal-title">Tool</h3>
-                                <button onclick="closeToolModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                            <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl">
+                                <h3 class="font-bold text-lg flex items-center gap-2" id="modal-title">Tool</h3>
+                                <button onclick="closeToolModal()" class="w-8 h-8 rounded-full bg-white text-gray-400 hover:text-red-500 hover:shadow shadow-sm transition flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <div id="modal-body" class="p-6 overflow-y-auto custom-scroll"></div>
                         </div>
                     </div>
-                    <input type="file" id="pdfInput" hidden accept="image/*" onchange="processPDF(this)">
+                    <input type="file" id="pdfInput" hidden accept="image/*" multiple onchange="processPDF(this)">
                 </section>
             `,
             services: `
                 <section class="max-w-7xl mx-auto px-4 animate-enter pt-4">
-                    <h2 class="text-3xl font-bold text-center mb-10">Our Services</h2>
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100">
-                            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-print"></i></div>
-                            <h3 class="text-xl font-bold mb-2">Printing</h3>
-                            <button class="text-indigo-600 font-bold text-sm">Order via WhatsApp &rarr;</button>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100">
-                            <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-file-signature"></i></div>
-                            <h3 class="text-xl font-bold mb-2">Form Filling</h3>
-                            <button class="text-pink-600 font-bold text-sm">Apply Now &rarr;</button>
-                        </div>
-                         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100">
-                            <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-id-card"></i></div>
-                            <h3 class="text-xl font-bold mb-2">Documents</h3>
-                            <button class="text-cyan-600 font-bold text-sm">Contact Us &rarr;</button>
-                        </div>
-                    </div>
-                </section>
+    <h2 class="text-3xl font-bold text-center mb-10">Our Services</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Printing Service -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20want%20to%20order%20Printing%20services.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-print"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Printing</h3>
+            <button class="text-indigo-600 font-bold text-sm group-hover:underline">Order via WhatsApp &rarr;</button>
+        </div>
+
+        <!-- Form Filling Service -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20want%20to%20apply%20for%20Online%20Form%20Filling.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-file-signature"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Form Filling</h3>
+            <button class="text-pink-600 font-bold text-sm group-hover:underline">Apply Now &rarr;</button>
+        </div>
+
+        <!-- Documents Service -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20need%20assistance%20with%20Documents.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-id-card"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Documents</h3>
+            <button class="text-cyan-600 font-bold text-sm group-hover:underline">Contact Us &rarr;</button>
+        </div>
+
+        <!-- Photo Editing Service -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20want%20Photo%20Editing%20services.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-image"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Photo Editing</h3>
+            <button class="text-purple-600 font-bold text-sm group-hover:underline">Edit Photos &rarr;</button>
+        </div>
+
+        <!-- AI Tools Service -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20want%20to%20use%20AI%20Tools.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">AI Tools</h3>
+            <button class="text-yellow-600 font-bold text-sm group-hover:underline">Use AI Tools &rarr;</button>
+        </div>
+
+        <!-- Government Services -->
+        <div onclick="window.open('https://wa.me/917081355506?text=Hello%20Prince%20Online%20Center,%20I%20need%20assistance%20with%20Government%20Services.', '_blank')" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100 cursor-pointer group">
+            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Government Services</h3>
+            <button class="text-green-600 font-bold text-sm group-hover:underline">Apply Now &rarr;</button>
+        </div>
+    </div>
+</section>
+
             `,
             editor: `
                 <!-- ADVANCED EDITOR LAYOUT -->
-                <section class="fixed inset-0 top-[70px] bg-gray-100 flex flex-col lg:flex-row animate-enter z-0">
+                <section class="fixed inset-0 top-[80px] bg-gray-100 flex flex-col lg:flex-row animate-enter z-0">
                     
                     <!-- CANVAS AREA -->
                     <div class="relative flex-1 bg-[#e2e8f0] overflow-hidden flex items-center justify-center order-1 lg:order-2 h-[50%] lg:h-full p-4" id="canvas-wrapper">
@@ -445,13 +641,22 @@
                         
                         <canvas id="editor-canvas" class="shadow-2xl border-4 border-white"></canvas>
                         
-                        <!-- Floating Actions for Selected Object -->
-                        <div id="obj-actions" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 bg-white px-5 py-3 rounded-full shadow-2xl gap-5 items-center z-10 animate-enter border border-gray-200 flex">
+                        <!-- Actions Bar -->
+                        <div id="obj-actions" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 bg-white px-5 py-3 rounded-full shadow-2xl gap-3 items-center z-10 animate-enter border border-gray-200 flex">
                             <button onclick="editorAction('delete')" class="text-red-500 hover:scale-125 transition tooltip" title="Delete"><i class="fa-solid fa-trash-can text-lg"></i></button>
                             <div class="w-[1px] h-5 bg-gray-300"></div>
                             <button onclick="editorAction('clone')" class="text-indigo-600 hover:scale-125 transition tooltip" title="Copy"><i class="fa-solid fa-copy text-lg"></i></button>
-                            <button onclick="editorAction('front')" class="text-gray-600 hover:scale-125 transition tooltip" title="Bring to Front"><i class="fa-solid fa-layer-group text-lg"></i></button>
+                            <button onclick="editorAction('front')" class="text-gray-600 hover:scale-125 transition tooltip" title="Bring to Front"><i class="fa-solid fa-arrow-up-long text-lg"></i></button>
                             <button onclick="editorAction('back')" class="text-gray-600 hover:scale-125 transition tooltip" title="Send to Back"><i class="fa-solid fa-arrow-down-long text-lg"></i></button>
+                            <div class="w-[1px] h-5 bg-gray-300"></div>
+                            <input type="range" min="0" max="1" step="0.1" value="1" oninput="editorAction('opacity', this.value)" class="w-20 accent-indigo-600" title="Opacity">
+                        </div>
+
+                        <!-- Crop Controls (Hidden by default) -->
+                        <div id="crop-controls" class="hidden absolute top-6 left-1/2 -translate-x-1/2 bg-white px-5 py-2 rounded-full shadow-xl gap-4 items-center z-20 animate-enter border border-indigo-200">
+                            <span class="font-bold text-sm text-indigo-700">Crop Mode</span>
+                            <button onclick="applyCrop()" class="text-green-600 font-bold hover:scale-105"><i class="fa-solid fa-check"></i> Apply</button>
+                            <button onclick="cancelCrop()" class="text-red-500 font-bold hover:scale-105"><i class="fa-solid fa-xmark"></i> Cancel</button>
                         </div>
 
                         <div id="placeholder-text" class="absolute pointer-events-none text-slate-400 text-center flex flex-col items-center">
@@ -470,18 +675,98 @@
                         </div>
 
                         <!-- Scrollable Tools -->
-                        <div class="overflow-y-auto p-5 editor-tools space-y-6 flex-1 bg-white custom-scroll">
-                            
-                            <!-- 1. Upload -->
-                            <div class="p-4 border-2 border-dashed border-indigo-200 rounded-xl bg-indigo-50/50 hover:bg-indigo-50 transition cursor-pointer relative group">
-                                <input type="file" id="editor-upload" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" onchange="uploadImage(this)">
-                                <div class="text-center group-hover:scale-105 transition duration-300">
-                                    <i class="fa-solid fa-image text-indigo-500 text-2xl mb-1"></i>
-                                    <p class="text-xs font-bold text-indigo-700">Open Image</p>
+                        <div class="overflow-y-auto p-5 editor-tools space-y-8 flex-1 bg-white custom-scroll">
+                                        
+                         <!-- 1. Insert/Upload -->
+                         <div>
+                <label class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 block">Insert</label>
+                
+                                <!-- Image Upload Box -->
+                    <div class="p-4 border-2 border-dashed border-indigo-200 rounded-xl bg-indigo-50/50 hover:bg-indigo-50 transition cursor-pointer relative group mb-3">
+                        <input type="file" id="editor-upload" accept="image/*" 
+                            class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" 
+                            onchange="uploadImage(this)">
+                        <div class="text-center group-hover:scale-105 transition duration-300 pointer-events-none">
+                            <i class="fa-solid fa-image text-indigo-500 text-2xl mb-1"></i>
+                            <p class="text-xs font-bold text-indigo-700">Open Image</p>
+                        </div>
+                    </div>
+    
+    <!-- Quick Actions -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="addText()" class="py-2 border border-gray-200 bg-white text-gray-700 rounded-lg text-xs font-bold hover:border-indigo-500 hover:text-indigo-600 transition">
+                                <i class="fa-solid fa-font mr-1"></i> Add Text
+                            </button>
+                            <button onclick="toggleStickers()" class="py-2 border border-gray-200 bg-white text-gray-700 rounded-lg text-xs font-bold hover:border-pink-500 hover:text-pink-600 transition">
+                                <i class="fa-solid fa-face-smile mr-1"></i> Stickers
+                            </button>
+                        </div>
+
+                        <!-- Sticker Panel -->
+                        <div id="sticker-panel" class="hidden mt-2">
+                            <div class="grid grid-cols-5 gap-2 bg-gray-50 p-3 rounded-xl max-h-32 overflow-y-auto border border-gray-200 custom-scroll"></div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Placeholder for Canvas -->
+                    <p id="placeholder-text" class="text-center text-gray-400 mt-4">Upload an image to start editing</p>
+
+
+                            <!-- 2. Edit Tools (Crop & Resize) -->
+                            <div>
+                                <label class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 block">Canvas Tools</label>
+                                <div class="grid grid-cols-2 gap-3 mb-2">
+                                    <button onclick="startCrop()" class="py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-xs font-bold hover:bg-indigo-50 hover:text-indigo-600 transition flex flex-col items-center gap-1">
+                                        <i class="fa-solid fa-crop-simple text-lg"></i> Crop
+                                    </button>
+                                    <div class="relative group">
+                                        <button class="w-full h-full py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-xs font-bold hover:bg-indigo-50 hover:text-indigo-600 transition flex flex-col items-center gap-1">
+                                            <i class="fa-solid fa-expand text-lg"></i> Resize
+                                        </button>
+                                        <!-- Mini Resize Popup -->
+                                        <div class="hidden group-hover:block absolute bottom-full left-0 w-full bg-white p-3 shadow-xl rounded-lg border mb-2 z-50">
+                                            <input type="number" id="c-resize-w" placeholder="W" class="w-full text-xs border p-1 rounded mb-1">
+                                            <input type="number" id="c-resize-h" placeholder="H" class="w-full text-xs border p-1 rounded mb-1">
+                                            <button onclick="resizeCanvas()" class="w-full bg-indigo-600 text-white text-[10px] py-1 rounded">Apply</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 2. Text Tools (Context Aware) -->
+                            <!-- 3. AI Magic Fill (New Feature) -->
+                            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl border border-indigo-100 shadow-sm">
+                                <label class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-3 block"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI Magic Fill</label>
+                                <p class="text-[10px] text-gray-500 mb-3 leading-tight">Paint an area, describe object, and let AI generate it.</p>
+                                
+                                <button id="mask-btn" onclick="toggleMaskMode()" class="w-full py-2 bg-white border border-indigo-200 text-indigo-600 rounded-lg text-xs font-bold mb-3 hover:bg-indigo-600 hover:text-white transition">
+                                    <i class="fa-solid fa-paintbrush"></i> Paint Area
+                                </button>
+
+                                <div id="ai-controls" class="hidden space-y-2 animate-enter">
+                                    <textarea id="ai-edit-prompt" class="w-full text-xs p-2 rounded border border-gray-300 focus:outline-indigo-500 bg-white" rows="2" placeholder="Ex: Red Sunglasses, Blue Hat..."></textarea>
+                                    <button onclick="runMagicFill()" class="w-full py-2 bg-gradient-to-r from-indigo-600 to-pink-500 text-white rounded-lg text-xs font-bold shadow-md hover:scale-[1.02] transition">Generate Object</button>
+                                </div>
+                            </div>
+
+                            <!-- 4. Drawing & Shapes -->
+                            <div>
+                                <label class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 block">Draw & Shapes</label>
+                                <div class="flex gap-2 mb-3">
+                                    <button onclick="toggleDraw()" id="draw-btn" class="flex-1 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition text-lg"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="addShape('rect')" class="flex-1 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition text-lg"><i class="fa-regular fa-square"></i></button>
+                                    <button onclick="addShape('circle')" class="flex-1 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition text-lg"><i class="fa-regular fa-circle"></i></button>
+                                    <button onclick="addShape('triangle')" class="flex-1 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition text-lg"><i class="fa-solid fa-play fa-rotate-270 text-sm"></i></button>
+                                </div>
+                                <div id="draw-controls" class="hidden animate-enter bg-gray-50 p-2 rounded-lg border border-gray-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <input type="color" id="brush-color" class="w-6 h-6 rounded cursor-pointer border-none" onchange="updateBrush()" value="#000000">
+                                        <input type="range" id="brush-size" min="1" max="50" value="5" class="flex-1 h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer" oninput="updateBrush()">
+                                    </div>
+                                    <p class="text-[10px] text-gray-400 text-center">Brush Size & Color</p>
+                                </div>
+                            </div>
+
+                            <!-- 5. Text Tools (Context Aware) -->
                             <div id="text-tools" class="hidden animate-enter bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
                                 <label class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-3 block">Text Styling</label>
                                 <div class="flex gap-2 mb-3">
@@ -493,8 +778,6 @@
                                         <option value="Poppins">Geometric</option>
                                         <option value="Dancing Script">Cursive</option>
                                         <option value="Oswald">Bold Impact</option>
-                                        <option value="Playfair Display">Elegant Serif</option>
-                                        <option value="Courier New">Typewriter</option>
                                     </select>
                                 </div>
                                 <div class="flex gap-2">
@@ -503,23 +786,7 @@
                                 </div>
                             </div>
 
-                            <!-- 3. Add Elements -->
-                            <div>
-                                <label class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 block">Add Elements</label>
-                                <div class="flex gap-3 mb-4">
-                                    <button onclick="addText()" class="flex-1 py-3 border border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs hover:border-indigo-500 hover:text-indigo-600 shadow-sm transition flex flex-col items-center gap-1"><i class="fa-solid fa-font text-lg"></i> Text</button>
-                                    <button onclick="toggleStickers()" class="flex-1 py-3 border border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs hover:border-pink-500 hover:text-pink-600 shadow-sm transition flex flex-col items-center gap-1"><i class="fa-solid fa-face-smile text-lg"></i> Stickers</button>
-                                </div>
-                                
-                                <!-- Extended Sticker Grid -->
-                                <div id="sticker-panel" class="hidden">
-                                    <div class="grid grid-cols-5 gap-2 bg-gray-50 p-3 rounded-xl max-h-48 overflow-y-auto border border-gray-200 custom-scroll">
-                                        <!-- Stickers injected via JS -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 4. Global Filters -->
+                            <!-- 6. Filters -->
                             <div>
                                 <label class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 block">Adjustments</label>
                                 <div class="grid grid-cols-3 gap-2 mb-4">
@@ -538,9 +805,7 @@
             `
         };
 
-        // ================= CORE FUNCTIONS =================
         function router(page) {
-            // Fake loading effect on page switch for UX
             toggleLoader(true);
             setTimeout(() => {
                 document.getElementById('app').innerHTML = pages[page];
@@ -558,23 +823,26 @@
             }, 600); 
         }
 
-        // ================= EDITOR LOGIC (Fabric.js) =================
+        // ================= EDITOR LOGIC (Completely Overhauled) =================
         let canvas, mainImage;
         const stickers = ['🔥','😎','✅','❤️','⭐','🎉','👑','🚀','💡','🎵','🐶','🐱','🍕','⚽','🚗','💍','🎁','🎂','💯','👻','👽','💀','🌺','🍔','🌈','🦄','💩','👀','🦋','⚡'];
 
         function initEditor() {
             const wrapper = document.getElementById('canvas-wrapper');
             if(!wrapper) return;
-            
-            const w = wrapper.clientWidth;
-            const h = wrapper.clientHeight;
-            
+            const w = wrapper.clientWidth, h = wrapper.clientHeight;
             if(canvas) canvas.dispose();
+            
+            // Initialize Fabric Canvas
             canvas = new fabric.Canvas('editor-canvas', { 
-                width: w - 20, height: h - 20, backgroundColor: '#ffffff', selection: true 
+                width: w - 20, 
+                height: h - 20, 
+                backgroundColor: '#ffffff', 
+                selection: true,
+                preserveObjectStacking: true 
             });
 
-            // Populate Stickers Grid
+            // Populate Stickers
             const stickerContainer = document.querySelector('#sticker-panel div');
             if(stickerContainer) {
                 stickerContainer.innerHTML = stickers.map(s => 
@@ -582,200 +850,533 @@
                 ).join('');
             }
             
-            // Event Listeners for UI
+            // Listeners
             canvas.on('selection:created', handleSelection);
             canvas.on('selection:updated', handleSelection);
             canvas.on('selection:cleared', () => {
                 document.getElementById('obj-actions').classList.add('hidden');
                 document.getElementById('text-tools').classList.add('hidden');
             });
-
             window.addEventListener('resize', () => { 
-                if(!canvas) return;
-                canvas.setWidth(wrapper.clientWidth - 20);
-                canvas.setHeight(wrapper.clientHeight - 20);
-                if(mainImage) mainImage.center();
-                canvas.renderAll();
+                if(canvas){ 
+                    canvas.setWidth(wrapper.clientWidth-20); 
+                    canvas.setHeight(wrapper.clientHeight-20); 
+                }
             });
         }
 
-        // --- Selection Handler ---
+        // --- Selection Handling ---
         function handleSelection() {
             const active = canvas.getActiveObject();
             if(!active) return;
-
-            // Show Floating Actions
             document.getElementById('obj-actions').classList.remove('hidden');
-
-            // Show Text Tools if text
             const textTools = document.getElementById('text-tools');
             if(active.type === 'i-text' || active.type === 'text') {
                 textTools.classList.remove('hidden');
                 document.getElementById('text-color').value = active.fill;
-                document.getElementById('font-family').value = active.fontFamily;
-            } else {
-                textTools.classList.add('hidden');
-            }
+            } else textTools.classList.add('hidden');
         }
 
-        // --- Object Actions ---
-        function editorAction(action) {
+        // --- Object & Canvas Actions ---
+        function editorAction(action, val) {
             const active = canvas.getActiveObject();
-            if(!active) return showToast('Select an object first', 'error');
-
-            if(action === 'delete') {
-                canvas.remove(active);
-                canvas.discardActiveObject();
-                canvas.renderAll();
-                document.getElementById('obj-actions').classList.add('hidden');
-            } else if (action === 'clone') {
-                active.clone(function(cloned) {
-                    canvas.discardActiveObject();
-                    cloned.set({ left: active.left + 20, top: active.top + 20, evented: true });
-                    if (cloned.type === 'activeSelection') {
-                        cloned.canvas = canvas;
-                        cloned.forEachObject(function(obj) { canvas.add(obj); });
-                        cloned.setCoords();
-                    } else {
-                        canvas.add(cloned);
-                    }
+            if(!active && action !== 'bg') return showToast('Select an object first', 'error');
+            
+            if(action === 'delete') { 
+                canvas.remove(active); 
+                document.getElementById('obj-actions').classList.add('hidden'); 
+            }
+            else if (action === 'clone') { 
+                active.clone(function(cloned) { 
+                    canvas.add(cloned.set({left: active.left+20, top: active.top+20})); 
                     canvas.setActiveObject(cloned);
-                    canvas.requestRenderAll();
-                });
-            } else if (action === 'front') {
-                active.bringToFront();
-            } else if (action === 'back') {
-                active.sendToBack();
-                if(mainImage) mainImage.sendToBack(); 
+                }); 
+            }
+            else if (action === 'front') active.bringToFront();
+            else if (action === 'back') { active.sendToBack(); if(mainImage) mainImage.sendToBack(); }
+            else if (action === 'opacity') { active.set('opacity', parseFloat(val)); canvas.renderAll(); }
+        }
+
+        // --- FIXED Image Upload ---
+        function uploadImage(input) {
+            if (input.files && input.files[0]) {
+                toggleLoader(true);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgObj = new Image();
+                    imgObj.src = e.target.result;
+                    imgObj.onload = function() {
+                        const imgInstance = new fabric.Image(imgObj);
+                        canvas.clear();
+                        canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+                        
+                        // Smart Scaling to fit image within canvas
+                        const scale = Math.min((canvas.width - 50) / imgInstance.width, (canvas.height - 50) / imgInstance.height);
+                        imgInstance.set({
+                            scaleX: scale, scaleY: scale, 
+                            left: canvas.width/2, top: canvas.height/2,
+                            originX: 'center', originY: 'center',
+                            selectable: true
+                        });
+                        
+                        mainImage = imgInstance;
+                        canvas.add(imgInstance);
+                        canvas.setActiveObject(imgInstance);
+                        document.getElementById('placeholder-text').style.display = 'none';
+                        toggleLoader(false);
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+                input.value = ''; // Reset input so same file can be selected again
             }
         }
 
-        // --- Text Styling ---
+        // --- Crop Functionality ---
+        let cropRect, isCropping = false;
+        function startCrop() {
+            if(!mainImage) return showToast('Upload image first', 'error');
+            isCropping = true;
+            document.getElementById('crop-controls').classList.remove('hidden');
+            
+            // Create a selection box
+            cropRect = new fabric.Rect({
+                left: canvas.width/2 - 100, top: canvas.height/2 - 100,
+                width: 200, height: 200,
+                fill: 'rgba(0,0,0,0.3)',
+                stroke: '#4f46e5', strokeWidth: 2,
+                cornerColor: 'white', cornerSize: 10,
+                transparentCorners: false,
+                hasRotatingPoint: false
+            });
+            canvas.add(cropRect);
+            canvas.setActiveObject(cropRect);
+        }
+        
+        function applyCrop() {
+            if (!cropRect) return;
+            const left = cropRect.left;
+            const top = cropRect.top;
+            const width = cropRect.width * cropRect.scaleX;
+            const height = cropRect.height * cropRect.scaleY;
+            
+            // In a real app, complex cropping involves clipping paths. 
+            // For simple implementation, we zoom/pan to simulate crop or basic clip.
+            // Here, we'll try a basic clipTo function on the canvas
+            
+            canvas.remove(cropRect);
+            
+            // Export the cropped area as an image
+            const croppedData = canvas.toDataURL({
+                left: left, top: top, width: width, height: height
+            });
+            
+            // Re-import it
+            fabric.Image.fromURL(croppedData, function(img) {
+                canvas.clear();
+                canvas.setBackgroundColor('#ffffff');
+                img.set({ left: canvas.width/2, top: canvas.height/2, originX: 'center', originY: 'center' });
+                canvas.add(img);
+                mainImage = img;
+            });
+            
+            cancelCrop();
+        }
+        
+        function cancelCrop() {
+            if(cropRect) canvas.remove(cropRect);
+            document.getElementById('crop-controls').classList.add('hidden');
+            isCropping = false;
+        }
+
+        // --- Resize Canvas ---
+        function resizeCanvas() {
+            const w = parseInt(document.getElementById('c-resize-w').value);
+            const h = parseInt(document.getElementById('c-resize-h').value);
+            if(w && h) {
+                canvas.setWidth(w);
+                canvas.setHeight(h);
+                // Center the main image
+                if(mainImage) {
+                    mainImage.center();
+                    mainImage.setCoords();
+                }
+                canvas.renderAll();
+                showToast(`Canvas resized to ${w}x${h}`, 'success');
+            }
+        }
+
+        // --- Drawing Tools ---
+        function toggleDraw() {
+            canvas.isDrawingMode = !canvas.isDrawingMode;
+            const btn = document.getElementById('draw-btn');
+            const controls = document.getElementById('draw-controls');
+            
+            if(canvas.isDrawingMode) {
+                btn.classList.add('bg-indigo-100', 'text-indigo-600', 'border-indigo-400');
+                controls.classList.remove('hidden');
+                canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+                updateBrush();
+            } else {
+                btn.classList.remove('bg-indigo-100', 'text-indigo-600', 'border-indigo-400');
+                controls.classList.add('hidden');
+            }
+        }
+        function updateBrush() {
+            if(!canvas.freeDrawingBrush) return;
+            canvas.freeDrawingBrush.color = document.getElementById('brush-color').value;
+            canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value, 10) || 5;
+        }
+
+        // --- Shapes ---
+        function addShape(type) {
+            let shape;
+            const center = { left: canvas.width/2, top: canvas.height/2, originX: 'center', originY: 'center', fill: '#4f46e5' };
+            if(type === 'rect') shape = new fabric.Rect({ ...center, width: 100, height: 100 });
+            if(type === 'circle') shape = new fabric.Circle({ ...center, radius: 50 });
+            if(type === 'triangle') shape = new fabric.Triangle({ ...center, width: 100, height: 100 });
+            canvas.add(shape);
+            canvas.setActiveObject(shape);
+            canvas.isDrawingMode = false;
+        }
+
+        // --- AI Magic Fill (New Logic) ---
+        let isMasking = false;
+        function toggleMaskMode() {
+            isMasking = !isMasking;
+            const btn = document.getElementById('mask-btn');
+            const controls = document.getElementById('ai-controls');
+            
+            if(isMasking) {
+                btn.innerHTML = '<i class="fa-solid fa-xmark"></i> Stop Painting';
+                btn.classList.add('bg-indigo-600', 'text-white');
+                controls.classList.remove('hidden');
+                
+                // Set Brush to "Masking" style
+                canvas.isDrawingMode = true;
+                canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+                canvas.freeDrawingBrush.color = 'rgba(255, 0, 0, 0.4)'; // Red transparent mask
+                canvas.freeDrawingBrush.width = 30;
+                showToast('Paint over the area you want to edit', 'success');
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-paintbrush"></i> Paint Area';
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                controls.classList.add('hidden');
+                canvas.isDrawingMode = false;
+            }
+        }
+
+        function runMagicFill() {
+            const prompt = document.getElementById('ai-edit-prompt').value;
+            if(!prompt) return showToast('Please enter a prompt', 'error');
+            
+            // Find the "Mask" (Last added path usually, since user just painted)
+            const objects = canvas.getObjects();
+            const maskPath = objects[objects.length - 1];
+            
+            if(!maskPath || maskPath.type !== 'path') return showToast('Please paint an area first', 'error');
+            
+            toggleLoader(true);
+            
+            // Simulate AI Processing by fetching a generated object and placing it
+            const centerPoint = maskPath.getCenterPoint();
+            const width = maskPath.width || 200;
+            const height = maskPath.height || 200;
+            
+            const img = new Image();
+            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=400&height=400&nologo=true`;
+            
+            img.onload = function() {
+                canvas.remove(maskPath); // Remove the red mask
+                
+                const imgInstance = new fabric.Image(img);
+                imgInstance.set({
+                    left: centerPoint.x,
+                    top: centerPoint.y,
+                    originX: 'center', originY: 'center',
+                    scaleX: (width / img.width) * 1.5,
+                    scaleY: (height / img.height) * 1.5
+                });
+                
+                canvas.add(imgInstance);
+                canvas.setActiveObject(imgInstance);
+                toggleMaskMode(); // Turn off mask mode
+                toggleLoader(false);
+                showToast('AI Object Generated!', 'success');
+            };
+            
+            img.onerror = function() {
+                toggleLoader(false);
+                showToast('Generation failed', 'error');
+            }
+        }
+
+        // --- Common Editor Funcs ---
+        function addText() { 
+            const t = new fabric.IText('Double Tap', { left: canvas.width/2, top: canvas.height/2, fontSize: 40, fill: '#333', originX:'center', originY:'center' }); 
+            canvas.add(t); canvas.setActiveObject(t); 
+        }
+        function addSticker(s) { 
+            const t = new fabric.Text(s, { left: canvas.width/2, top: canvas.height/2, fontSize: 80, originX:'center', originY:'center' }); 
+            canvas.add(t); canvas.setActiveObject(t); 
+        }
+        function toggleStickers() { document.getElementById('sticker-panel').classList.toggle('hidden'); }
         function updateTextStyle(type, val) {
             const active = canvas.getActiveObject();
-            if(!active || (active.type !== 'i-text' && active.type !== 'text')) return;
-
+            if(!active) return;
             if(type === 'color') active.set('fill', val);
             if(type === 'font') active.set('fontFamily', val);
             if(type === 'bold') active.set('fontWeight', active.fontWeight === 'bold' ? 'normal' : 'bold');
             if(type === 'italic') active.set('fontStyle', active.fontStyle === 'italic' ? 'normal' : 'italic');
-            
             canvas.renderAll();
         }
+        function applyFilter(type) { if(mainImage) { if(type==='grayscale') mainImage.filters.push(new fabric.Image.filters.Grayscale()); if(type==='sepia') mainImage.filters.push(new fabric.Image.filters.Sepia()); mainImage.applyFilters(); canvas.renderAll(); } }
+        function resetFilters() { if(mainImage) { mainImage.filters=[]; mainImage.applyFilters(); canvas.renderAll(); } }
+        function updateBlur(val) { if(mainImage) { mainImage.filters = mainImage.filters.filter(f=>f.type!=='Blur'); if(val>0) mainImage.filters.push(new fabric.Image.filters.Blur({blur: val/100})); mainImage.applyFilters(); canvas.renderAll(); }}
+        function downloadImage() { if(canvas){ canvas.discardActiveObject(); canvas.renderAll(); const l = document.createElement('a'); l.download='prince-hub-edit.png'; l.href=canvas.toDataURL(); l.click(); }}
 
-        function addText() { 
-            const t = new fabric.IText('Double Tap', { 
-                fontSize: 32, fill: '#4f46e5', left: canvas.width/2, top: canvas.height/2,
-                fontFamily: 'Plus Jakarta Sans', originX:'center', originY:'center', fontWeight: 'bold'
-            });
-            canvas.add(t); canvas.setActiveObject(t);
+        // ================= TOOLS PAGE LOGIC =================
+        function openToolModal(t) {
+            const modal = document.getElementById('tool-modal');
+            const body = document.getElementById('modal-body');
+            const title = document.getElementById('modal-title');
+            
+            // Ensure modal scrolls into view smoothly
+            modal.classList.remove('hidden');
+            window.scrollTo({ top: modal.offsetTop, behavior: 'smooth' });
+            
+            if(t === 'text2img') {
+                title.innerText = "AI Image Generator";
+                body.innerHTML = `
+                    <textarea id="gen-prompt" class="w-full border p-3 rounded-lg bg-gray-50 h-24 mb-3" placeholder="Describe image..."></textarea>
+                    <button class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold" onclick="generateAIImage()">Generate</button>
+                    <div id="gen-result" class="mt-3 min-h-[200px] bg-gray-100 rounded-lg flex items-center justify-center"></div>
+                `;
+            } else if (t === 'qrcode') {
+                title.innerText = "QR Code Maker";
+                body.innerHTML = `
+                    <input type="text" id="qr-text" class="w-full border p-3 rounded-lg mb-3" placeholder="Enter URL or Text">
+                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold" onclick="generateQR()">Create QR Code</button>
+                    <div id="qr-result" class="mt-4 flex justify-center"></div>
+                `;
+            } else if (t === 'compressor') {
+                title.innerText = "Image Compressor";
+                body.innerHTML = `
+                    <input type="file" id="comp-input" class="w-full mb-4" accept="image/*">
+                    <label class="text-sm font-bold text-gray-600">Quality: <span id="comp-val">70</span>%</label>
+                    <input type="range" min="10" max="90" value="70" class="w-full mb-4" oninput="document.getElementById('comp-val').innerText=this.value">
+                    <button class="w-full bg-green-600 text-white py-3 rounded-lg font-bold" onclick="compressImage()">Compress & Download</button>
+                `;
+            } else if (t === 'passport') {
+                title.innerText = "Passport Photo Maker";
+                body.innerHTML = `
+                    <p class="text-sm text-gray-500 mb-2">Resizes image to 35x45mm (Standard).</p>
+                    <input type="file" id="pass-input" class="w-full mb-4" accept="image/*">
+                    <button class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold" onclick="makePassport()">Generate Photo</button>
+                `;
+            } 
+             else if (t === 'resizer') {
+                title.innerText = "Image Resizer";
+                body.innerHTML = `
+                    <input type="file" id="resize-input" class="w-full mb-4 border p-2 rounded" accept="image/*" onchange="initResizer(this)">
+                    <div id="resize-controls" class="hidden">
+                         <div class="flex gap-2 mb-3">
+                            <input type="number" id="resize-w" class="w-1/2 border p-2 rounded" placeholder="Width">
+                            <input type="number" id="resize-h" class="w-1/2 border p-2 rounded" placeholder="Height">
+                        </div>
+                        <button class="w-full bg-teal-600 text-white py-2 rounded-lg font-bold mb-3" onclick="applyResize()">Resize Preview</button>
+                        <div id="resize-result" class="preview-box mb-3"></div>
+                    </div>
+                `;
+            }
+        }
+        function closeToolModal() { document.getElementById('tool-modal').classList.add('hidden'); }
+        
+        function forceDownload(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
-        function addSticker(s) { 
-            const t = new fabric.Text(s, { fontSize: 70, originX:'center', originY:'center', left: canvas.width/2, top: canvas.height/2 });
-            canvas.add(t); canvas.setActiveObject(t);
-            if(window.innerWidth < 1024) document.getElementById('sticker-panel').classList.add('hidden');
+        // --- Tool Functions ---
+        async function generateAIImage() {
+    const prompt = document.getElementById('gen-prompt').value;
+    if (!prompt) return showToast('Enter prompt', 'error');
+
+    const res = document.getElementById('gen-result');
+    res.innerHTML = '<span class="loader-spin border-4 border-indigo-500 border-t-transparent rounded-full w-8 h-8 mx-auto"></span>';
+
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+
+    // Fetch the image as blob for download
+    try {
+        const response = await fetch(url, { mode: 'cors' });
+        if (!response.ok) throw new Error('Network error');
+
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Create container
+        const container = document.createElement('div');
+        container.className = 'flex flex-col items-center gap-2';
+
+        // Create image
+        const img = document.createElement('img');
+        img.src = blobUrl;
+        img.className = 'rounded-lg shadow w-full';
+        img.alt = 'AI Generated Image';
+
+        // Create download button
+        const btn = document.createElement('button');
+        btn.innerHTML = '<i class="fa-solid fa-download"></i> Download';
+        btn.className = 'mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-md transition duration-300 flex items-center justify-center';
+        btn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = 'ai-art.jpg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        // Append image and button vertically
+        container.appendChild(img);
+        container.appendChild(btn);
+
+        // Show in result area
+        res.innerHTML = '';
+        res.appendChild(container);
+
+    } catch (err) {
+        showToast('Image generation failed', 'error');
+        console.error(err);
+        res.innerHTML = '';
+    }
+}
+
+        function generateQR() {
+            const txt = document.getElementById('qr-text').value;
+            if(!txt) return showToast('Enter text', 'error');
+            const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(txt)}`;
+            document.getElementById('qr-result').innerHTML = `
+                <img src="${url}" class="border p-2 rounded mb-2">
+                <button onclick="forceDownload('${url}', 'qrcode.png')" class="bg-blue-600 text-white px-4 py-1 text-xs rounded mt-2">Download</button>
+            `;
+        }
+        function compressImage() {
+            const file = document.getElementById('comp-input').files[0];
+            if(!file) return showToast('Select image', 'error');
+            const quality = document.querySelector('input[type=range]').value / 100;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    c.width = img.width; c.height = img.height;
+                    const ctx = c.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const link = document.createElement('a');
+                    link.download = 'compressed.jpg';
+                    link.href = c.toDataURL('image/jpeg', quality);
+                    link.click();
+                    showToast('Compressed!', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Resizer Logic
+        let resizeImg = null;
+        function initResizer(input) {
+            if(!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    resizeImg = img;
+                    document.getElementById('resize-controls').classList.remove('hidden');
+                    document.getElementById('resize-w').value = img.width;
+                    document.getElementById('resize-h').value = img.height;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+        function applyResize() {
+            if(!resizeImg) return;
+            const w = parseInt(document.getElementById('resize-w').value);
+            const h = parseInt(document.getElementById('resize-h').value);
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(resizeImg, 0, 0, w, h);
+            const url = canvas.toDataURL();
+            
+            document.getElementById('resize-result').innerHTML = `
+                <p class="text-xs text-gray-500 mb-2">New Size: ${w} x ${h}px</p>
+                <img src="${url}" class="h-32 object-contain border rounded mb-2">
+                <button onclick="forceDownload('${url}', 'resized-image.png')" class="bg-teal-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full"><i class="fa-solid fa-download"></i> Download</button>
+            `;
         }
 
-        function toggleStickers() { 
-            document.getElementById('sticker-panel').classList.toggle('hidden'); 
+        function makePassport() {
+            const file = document.getElementById('pass-input').files[0];
+            if(!file) return showToast('Select image', 'error');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    c.width = 413; c.height = 531;
+                    const ctx = c.getContext('2d');
+                    ctx.fillStyle = "white"; ctx.fillRect(0,0,413,531);
+                    const scale = Math.max(413/img.width, 531/img.height);
+                    const x = (413 - img.width * scale) / 2;
+                    const y = (531 - img.height * scale) / 2;
+                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                    const link = document.createElement('a');
+                    link.download = 'passport-photo.png';
+                    link.href = c.toDataURL();
+                    link.click();
+                    showToast('Passport Photo Created!', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
-
-        // --- Image Handling ---
-        function uploadImage(input) {
+        function simulateAIProcess() {
+            if(!document.getElementById('ai-input').files[0]) return showToast('Upload image', 'error');
+            toggleLoader(true);
+            setTimeout(() => {
+                toggleLoader(false);
+                document.getElementById('ai-result').classList.remove('hidden');
+                showToast('Processing Complete', 'success');
+            }, 2000);
+        }
+        function triggerPDF() { document.getElementById('pdfInput').click(); }
+        function processPDF(input) {
             if (input.files && input.files[0]) {
-                toggleLoader(true); // Show loader during upload
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    fabric.Image.fromURL(e.target.result, function(img) {
-                        canvas.clear(); 
-                        canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
-                        const scale = Math.min((canvas.width - 40) / img.width, (canvas.height - 40) / img.height);
-                        img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center' });
-                        canvas.centerObject(img);
-                        mainImage = img; 
-                        canvas.add(img); 
-                        document.getElementById('placeholder-text').style.display = 'none';
-                        toggleLoader(false);
-                    });
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const imgWidth = 190;
+                        const imgHeight = (img.height * imgWidth) / img.width;
+                        doc.addImage(img, 'JPEG', 10, 10, imgWidth, imgHeight);
+                        doc.save("document.pdf");
+                        showToast('PDF Downloaded!', 'success');
+                    }
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function applyFilter(type) {
-            if (!mainImage) return showToast('Upload image first', 'error');
-            toggleLoader(true); // Show loader during filter application
-            setTimeout(() => { 
-                if(type==='grayscale') mainImage.filters.push(new fabric.Image.filters.Grayscale());
-                if(type==='sepia') mainImage.filters.push(new fabric.Image.filters.Sepia());
-                mainImage.applyFilters(); canvas.renderAll();
-                toggleLoader(false);
-            }, 100);
-        }
-        function resetFilters() { if(mainImage){ mainImage.filters = []; mainImage.applyFilters(); canvas.renderAll(); } }
-        function updateBlur(val) { 
-            if(!mainImage) return; 
-            document.getElementById('val-blur').innerText = val;
-            mainImage.filters = mainImage.filters.filter(f => f.type !== 'Blur');
-            if(val > 0) mainImage.filters.push(new fabric.Image.filters.Blur({ blur: parseFloat(val)/100 }));
-            mainImage.applyFilters(); canvas.renderAll();
-        }
-        function downloadImage() {
-            if(!canvas) return;
-            toggleLoader(true);
-            setTimeout(() => {
-                canvas.discardActiveObject(); canvas.renderAll();
-                const link = document.createElement('a'); link.download = 'prince-hub-edit.png'; link.href = canvas.toDataURL({format: 'png', quality: 0.9}); link.click();
-                toggleLoader(false);
-                showToast('Image Saved!', 'success');
-            }, 800);
-        }
-
-        // --- Common ---
-        function openToolModal(t) { 
-            document.getElementById('tool-modal').classList.remove('hidden'); 
-            
-            document.getElementById('modal-title').innerText = t === 'text2img' ? 'AI Image Generator' : 'Tool';
-            
-            // Logic for AI Generation Tool
-            if(t === 'text2img') {
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="flex flex-col gap-3">
-                        <textarea id="gen-prompt" class="w-full border p-3 rounded-lg bg-gray-50 h-24 focus:outline-indigo-500 transition" placeholder="Describe image... (e.g. A futuristic robot in a neon city)"></textarea>
-                        <button class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition" onclick="generateAIImage()">Generate Image</button>
-                        <div id="gen-result" class="mt-2 min-h-[200px] bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300 relative">
-                            <span class="text-xs text-gray-400">Result will appear here</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                document.getElementById('modal-body').innerHTML = `<p class="text-gray-500 mb-4">Feature: ${t}</p><button class="w-full bg-indigo-600 text-white py-2 rounded-lg" onclick="closeToolModal()">Close</button>`;
-            }
-        }
-
-        function generateAIImage() {
-            const prompt = document.getElementById('gen-prompt').value;
-            if(!prompt) return showToast('Please enter a prompt', 'error');
-            
-            toggleLoader(true); // Global loader
-            const res = document.getElementById('gen-result');
-            // Add local text loader just in case
-            res.innerHTML = '<span class="text-xs text-gray-500 animate-pulse">Generating art...</span>';
-            
-            const img = new Image();
-            img.onload = () => { 
-                res.innerHTML = ''; res.appendChild(img); 
-                toggleLoader(false); 
-            };
-            img.onerror = () => { 
-                toggleLoader(false); showToast('Generation failed. Try again.', 'error'); res.innerHTML = 'Error';
-            };
-            img.className = 'w-full rounded-lg shadow-lg';
-            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-        }
-
-        function closeToolModal() { document.getElementById('tool-modal').classList.add('hidden'); }
         function showToast(msg, type) {
             const d = document.createElement('div');
             d.className = `bg-white px-4 py-3 rounded-lg shadow-xl border-l-4 ${type==='error'?'border-red-500':'border-indigo-500'} animate-enter text-sm font-medium flex items-center gap-2`;
